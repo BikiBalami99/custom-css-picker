@@ -10,18 +10,100 @@
         <div>
             <h1>Custom Picker</h1>
             <h2>Extra Large</h2>
-            <ul class="picker-container">
-                <li class="picker-base picker-item">Item 1</li>
-                <li class="picker-base picker-item">Item 2</li>
-                <li class="picker-base picker-item">Item 3</li>
-                <li class="picker-base picker-item">Item 4</li>
-                <li class="picker-base picker-item">Item 5</li>
-                <li class="picker-base picker-item">Item 6</li>
-                <li class="picker-base picker-item">Item 7</li>
-                <li class="picker-base picker-item">Item 8</li>
-                <li class="picker-base picker-item">Item 9</li>
-                <li class="picker-base picker-item">Item 10</li>
-            </ul>
+            <!-- Display selected item here -->
+            <div
+                id="selected-item"
+                style="margin-bottom: 2rem; font-size: 1.5rem; color: #c1334e"
+            ></div>
+            <div class="container">
+                <div class="container">
+                    <div class="white-outline"></div>
+                    <ul class="picker-container">
+                        <li class="picker-base empty-item"></li>
+                        <li class="picker-base empty-item"></li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 1
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 2
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 3
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 4
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 5
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 6
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 7
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 8
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 9
+                        </li>
+                        <li class="picker-base picker-item" tabindex="0">
+                            Item 10
+                        </li>
+                        <li class="picker-base empty-item"></li>
+                        <li class="picker-base empty-item"></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </body>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const pickerContainer = document.querySelector(".picker-container");
+            const pickerItems = document.querySelectorAll(".picker-item");
+            const selectedItemDiv = document.getElementById("selected-item");
+            let currentIndex = 0;
+
+            function updateSelectedByCenter() {
+                const containerRect = pickerContainer.getBoundingClientRect();
+                const containerCenter =
+                    containerRect.top + containerRect.height / 2;
+
+                let closestItem = null;
+                let closestDistance = Infinity;
+
+                pickerItems.forEach((item, idx) => {
+                    const itemRect = item.getBoundingClientRect();
+                    const itemCenter = itemRect.top + itemRect.height / 2;
+                    const distance = Math.abs(containerCenter - itemCenter);
+
+                    if (distance < closestDistance) {
+                        closestDistance = distance;
+                        closestItem = item;
+                        currentIndex = idx;
+                    }
+                });
+
+                // Remove previous selection
+                pickerItems.forEach((i) =>
+                    i.classList.remove("selected-picker")
+                );
+
+                if (closestItem) {
+                    closestItem.classList.add("selected-picker");
+                    selectedItemDiv.textContent = `Selected: ${closestItem.textContent.trim()}`;
+                }
+            }
+
+            // Initial update
+            updateSelectedByCenter();
+
+            // Update on scroll
+            pickerContainer.addEventListener("scroll", updateSelectedByCenter);
+
+            // Optional: update on resize
+            window.addEventListener("resize", updateSelectedByCenter);
+        });
+    </script>
 </html>
